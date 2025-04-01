@@ -1,0 +1,29 @@
+[project]
+name = "fastapi-github-oidc"
+description = "FastAPI middleware to authenticate Github OIDC Tokens"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = []
+dynamic = ["version"]
+
+[build-system]
+requires = ["hatchling", "hatch-vcs"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build]
+packages = ["src/github_oidc"]
+
+[tool.hatch.version]
+source = "vcs"
+
+[dependency-groups]
+dev = [
+    "fastapi>=0.115.12",
+    "pydantic>=2.11.1",
+    "pyjwt[crypto]>=2.10.1",
+    "httpx>=0.28.1",
+    "pytest>=8.3.5",
+    "ruff>=0.11.2",
+]
+
+server = ["fastapi>=0.115.12", "pydantic>=2.11.1", "pyjwt[crypto]>=2.10.1"]

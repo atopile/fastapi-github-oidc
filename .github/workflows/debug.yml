@@ -1,0 +1,28 @@
+on:
+  workflow_dispatch:
+    inputs:
+      server:
+        required: true
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    environment: debug
+    steps:
+      - uses: actions/checkout@v4
+
+      # See: https://tailscale.com/kb/1276/tailscale-github-action for setup
+      # OAuth needs `auth_keys` scope to function
+      - uses: tailscale/github-action@v3
+        with:
+            oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+            oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
+            tags: tag:ci
+
+      - uses: astral-sh/setup-uv@v5
+
+      - run: uv run python -m github_oidc.client
