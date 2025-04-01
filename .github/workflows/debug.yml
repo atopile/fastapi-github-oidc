@@ -25,4 +25,4 @@ jobs:
 
       - uses: astral-sh/setup-uv@v5
 
-      - run: uv run python -m github_oidc.client
+      - run: uv run python -m github_oidc.debug client ${{ inputs.server }}

@@ -31,8 +31,3 @@ def get_actions_token(audience: str) -> str:
     r.raise_for_status()
 
     return r.json()["value"]
-
-
-if __name__ == "__main__":
-    # We don't print this here to avoid exposing the token
-    get_actions_token("atopile.io")

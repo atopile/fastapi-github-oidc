@@ -8,6 +8,9 @@ from jwt import InvalidTokenError, PyJWKClient, decode
 from pydantic import BaseModel
 from starlette.status import HTTP_403_FORBIDDEN
 from typing_extensions import Doc
+import logging
+
+logger = logging.getLogger(__name__)
 
 oidc = OpenIdConnect(
     openIdConnectUrl="https://token.actions.githubusercontent.com/.well-known/openid-configuration",
@@ -96,27 +99,27 @@ class GithubOIDC(SecurityBase):
             return GithubOIDCClaims(**claims)
 
         except InvalidTokenError as e:
+            _print_exception()
             raise HTTPException(
                 status_code=HTTP_403_FORBIDDEN, detail="Invalid token"
             ) from e
 
         except Exception as e:
+            _print_exception()
             raise HTTPException(
                 status_code=HTTP_403_FORBIDDEN, detail="Authentication failed"
             ) from e
 
 
-if __name__ == "__main__":
-    import uvicorn
-    from fastapi import FastAPI
+def _print_exception():
+    if not logger.isEnabledFor(logging.DEBUG):
+        return
 
-    app = FastAPI()
+    try:
+        import rich
+    except ImportError:
+        return
 
-    @app.get("/")
-    async def root(
-        claims: GithubOIDCClaims = Security(GithubOIDC(audience="atopile.io")),
-    ):
-        return claims
+    import rich.traceback
 
-    # This is hosted openly (0.0.0.0:8000), because it's typically exposed for debugging
-    uvicorn.run(app, host="0.0.0.0", port=8000, log_level="debug")
+    rich.get_console().print_exception(show_locals=True)

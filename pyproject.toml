@@ -25,6 +25,8 @@ dev = [
     "pytest>=8.3.5",
     "ruff>=0.11.2",
     "uvicorn>=0.34.0",
+    "typer>=0.15.2",
+    "rich>=14.0.0",
 ]
 
 server = ["fastapi>=0.115.12", "pydantic>=2.11.1", "pyjwt[crypto]>=2.10.1"]
