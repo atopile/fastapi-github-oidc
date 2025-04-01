@@ -1,10 +1,11 @@
 # FastAPI Github OIDC Middleware
 
-FastAPI compatible middleware to authenticate Github OIDC Tokens
+FastAPI compatible middleware to authenticate [Github OIDC Tokens](https://docs.github.com/en/actions/security-for-github-actions/security-hardening-your-deployments/about-security-hardening-with-openid-connect)
 
-This makes authentication via a Github Action trivial.
+Want people to use your thing? Great! So we do. Make is easy!
 
-See: https://docs.github.com/en/actions/security-for-github-actions/security-hardening-your-deployments/about-security-hardening-with-openid-connect
+Github OIDC is a secure authentication mechanism with near-zero configuration required for many applications.
+
 
 ## Server Side
 
