@@ -104,3 +104,19 @@ class GithubOIDC(SecurityBase):
             raise HTTPException(
                 status_code=HTTP_403_FORBIDDEN, detail="Authentication failed"
             ) from e
+
+
+if __name__ == "__main__":
+    import uvicorn
+    from fastapi import FastAPI
+
+    app = FastAPI()
+
+    @app.get("/")
+    async def root(
+        claims: GithubOIDCClaims = Security(GithubOIDC(audience="atopile.io")),
+    ):
+        return claims
+
+    # This is hosted openly (0.0.0.0:8000), because it's typically exposed for debugging
+    uvicorn.run(app, host="0.0.0.0", port=8000, log_level="debug")

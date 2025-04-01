@@ -12,7 +12,7 @@ def test_client():
 
     @app.get("/")
     async def root(
-        claims: GithubOIDCClaims = Security(GithubOIDC(audience="some-website.com")),
+        claims: GithubOIDCClaims = Security(GithubOIDC(audience="atopile.io")),
     ):
         return claims
 
@@ -40,7 +40,7 @@ def test_with_auth(test_client: TestClient):
 
     response = test_client.get(
         "/",
-        headers={"Authorization": f"Bearer {get_actions_token('some-website.com')}"},
+        headers={"Authorization": f"Bearer {get_actions_token('atopile.io')}"},
     )
     response.raise_for_status()
 

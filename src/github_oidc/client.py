@@ -35,4 +35,4 @@ def get_actions_token(audience: str) -> str:
 
 if __name__ == "__main__":
     # We don't print this here to avoid exposing the token
-    get_actions_token("some-website.com")
+    get_actions_token("atopile.io")
