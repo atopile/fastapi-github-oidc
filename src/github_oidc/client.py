@@ -31,3 +31,7 @@ def get_actions_token(audience: str) -> str:
     r.raise_for_status()
 
     return r.json()["value"]
+
+
+def get_actions_header(audience: str) -> dict[str, str]:
+    return {"Authorization": f"Bearer {get_actions_token(audience)}"}

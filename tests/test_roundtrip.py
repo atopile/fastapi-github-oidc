@@ -36,12 +36,9 @@ def test_no_auth(test_client: TestClient):
 
 
 def test_with_auth(test_client: TestClient):
-    from github_oidc.client import get_actions_token
+    from github_oidc.client import get_actions_header
 
-    response = test_client.get(
-        "/",
-        headers={"Authorization": f"Bearer {get_actions_token('atopile.io')}"},
-    )
+    response = test_client.get("/", headers=get_actions_header("atopile.io"))
     response.raise_for_status()
 
     assert response.status_code == 200

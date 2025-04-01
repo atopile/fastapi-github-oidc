@@ -29,13 +29,11 @@ async def root(claims: GithubOIDCClaims = Security(GithubOIDC())):
 **You must also have either `httpx` or `requests` installed**
 
 ```python
-from github_oidc.client import get_actions_token
-
-token = get_actions_token(audience="atopile.io")
+from github_oidc.client import get_actions_header
 
 response = httpx.get(
     "https://atopile.io",
-    headers={"Authorization": f"Bearer {token}"},
+    headers=get_actions_header("atopile.io"),
 )
 response.raise_for_status()
 ```
