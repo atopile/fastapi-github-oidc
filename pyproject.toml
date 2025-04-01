@@ -10,7 +10,7 @@ dynamic = ["version"]
 requires = ["hatchling", "hatch-vcs"]
 build-backend = "hatchling.build"
 
-[tool.hatch.build]
+[tool.hatch.build.targets.wheel]
 packages = ["src/github_oidc"]
 
 [tool.hatch.version]
