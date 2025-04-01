@@ -37,3 +37,19 @@ response = httpx.get(
 )
 response.raise_for_status()
 ```
+
+Then, in your Action:
+
+```yaml
+# ...
+
+jobs:
+  my-job:
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      # ...
+      - run: uv run my-script.py
+```
