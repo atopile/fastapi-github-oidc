@@ -74,6 +74,8 @@ class GithubOIDC(SecurityBase):
         ],
     ):
         self.audience = audience
+        self.model = oidc
+        self.scheme_name = self.__class__.__name__
 
     async def __call__(
         self, authorization: Annotated[str, Security(oidc)]
