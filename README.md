@@ -53,3 +53,33 @@ jobs:
       # ...
       - run: uv run my-script.py
 ```
+
+## Authentication Flow
+```mermaid
+sequenceDiagram
+    participant GA as Client: GitHub Action
+    participant GH OIDC as OIDC Provider: Github
+    participant App as Server: FastAPI App
+
+    App->>+GH OIDC: Fetch OIDC config
+    GH OIDC-->>-App:  OIDC config
+
+    GA->>GA: ENV: ACTIONS_ID_TOKEN_REQUEST_[TOKEN, URL]
+    activate GA
+    GA->>+GH OIDC: Request OIDC Token (audience=...)
+    GH OIDC-->>-GA: Issue Signed JWT
+
+    activate App
+    GA->>App: Request with Authorization: Bearer JWT
+    App->>App: Extract JWT from header
+    App->>+GH OIDC: Fetch JWKS
+    GH OIDC-->>-App: Return Public Keys (JWKS)
+    App->>App: Verify JWT signature & claims (audience, issuer)
+    alt Token Valid
+        App-->>GA: Return Success (with claims)
+    else Token Invalid
+        App-->>GA: Return 403 Forbidden
+    end
+    deactivate App
+    deactivate GA
+```
