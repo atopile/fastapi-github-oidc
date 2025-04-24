@@ -1,3 +1,4 @@
+import logging
 import httpx
 import pytest
 from fastapi.testclient import TestClient
@@ -9,10 +10,11 @@ def test_client():
     from github_oidc.server import GithubOIDC, GithubOIDCClaims
 
     app = FastAPI()
+    ghoidc = GithubOIDC(audience="atopile.io")
 
     @app.get("/")
     async def root(
-        claims: GithubOIDCClaims = Security(GithubOIDC(audience="atopile.io")),
+        claims: GithubOIDCClaims = Security(ghoidc),
     ):
         return claims
 
@@ -37,6 +39,9 @@ def test_no_auth(test_client: TestClient):
 
 def test_with_auth(test_client: TestClient):
     from github_oidc.client import get_actions_header
+    from github_oidc.server import logger
+
+    logger.setLevel(logging.DEBUG)
 
     response = test_client.get("/", headers=get_actions_header("atopile.io"))
     response.raise_for_status()
