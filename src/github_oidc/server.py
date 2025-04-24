@@ -64,6 +64,7 @@ class GithubOIDC(SecurityBase):
     def __init__(
         self,
         *,
+        auto_error: bool = True,
         audience: Annotated[
             str,
             Doc(
@@ -73,18 +74,23 @@ class GithubOIDC(SecurityBase):
             ),
         ],
     ):
+        self.auto_error = auto_error
         self.audience = audience
         self.model = oidc
         self.scheme_name = self.__class__.__name__
 
     async def __call__(
         self, authorization: Annotated[str, Security(oidc)]
-    ) -> GithubOIDCClaims:
+    ) -> GithubOIDCClaims | None:
         scheme, token = get_authorization_scheme_param(authorization)
         if not authorization or scheme.lower() != "bearer":
-            raise HTTPException(
-                status_code=HTTP_403_FORBIDDEN, detail="Invalid authorization header"
-            )
+            if self.auto_error:
+                raise HTTPException(
+                    status_code=HTTP_403_FORBIDDEN,
+                    detail="Invalid authorization header",
+                )
+            else:
+                return None
 
         try:
             # Extract the token from the Authorization header
@@ -102,15 +108,21 @@ class GithubOIDC(SecurityBase):
 
         except InvalidTokenError as e:
             _print_exception()
-            raise HTTPException(
-                status_code=HTTP_403_FORBIDDEN, detail="Invalid token"
-            ) from e
+            if self.auto_error:
+                raise HTTPException(
+                    status_code=HTTP_403_FORBIDDEN, detail="Invalid token"
+                ) from e
+            else:
+                return None
 
         except Exception as e:
             _print_exception()
-            raise HTTPException(
-                status_code=HTTP_403_FORBIDDEN, detail="Authentication failed"
-            ) from e
+            if self.auto_error:
+                raise HTTPException(
+                    status_code=HTTP_403_FORBIDDEN, detail="Authentication failed"
+                ) from e
+            else:
+                return None
 
 
 def _print_exception():
